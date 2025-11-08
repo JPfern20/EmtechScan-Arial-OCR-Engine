@@ -1,14 +1,3 @@
-#!/usr/bin/env python3
-"""
-Tesseract Custom Training Data Generator for Arial Font (PNG-based)
---------------------------------------------------------
-Generates synthetic text lines by composing PNG character images
-from your dataset folders, for Tesseract training.
-
-Outputs: TIFF images + ground-truth .gt.txt files.
-
-"""
-
 import os
 import random
 from PIL import Image, ImageFilter
@@ -71,7 +60,7 @@ def load_character_images(input_dir):
                 char_images[char] = img
 
     if not char_images:
-        raise ValueError("No character images found in dataset. Check folder and filenames.")
+        raise ValueError("EmtechScan: DataJob: No character images are there in the specified input directory.")
     if ' ' not in char_images:
         space_width = 20  # Adjust as needed for spacing
         space_height = 64  # Match your line_height
@@ -89,7 +78,7 @@ def compose_text_line(text, char_images, line_height=64, spacing=5):
     resized_chars = []
     for ch in text:
         if ch not in char_images:
-            raise ValueError(f"Character '{ch}' not found in loaded images.")
+            raise ValueError(f"EmtechScan: DataJob: Character '{ch}' not found in loaded images.")
         img = char_images[ch]
         w, h = img.size
         new_h = line_height
@@ -97,11 +86,10 @@ def compose_text_line(text, char_images, line_height=64, spacing=5):
         resized = img.resize((new_w, new_h), Image.LANCZOS)
         resized_chars.append(resized)
 
-    # Calculate total width of line (sum widths + spacing)
+
     total_width = sum(img.width for img in resized_chars) + spacing * (len(resized_chars) - 1)
     line_img = Image.new('L', (total_width, line_height), color=255)  # white background
 
-    # Paste each character image side-by-side
     x_offset = 0
     for img in resized_chars:
         line_img.paste(img, (x_offset, 0))
@@ -114,37 +102,29 @@ def generate_training_data(input_dir="fonts/arial",
                            num_lines=1000,
                            line_height=64,
                            spacing=5):
-    """
-    Generate training data without using .ttf fonts,
-    composing PNG characters side by side.
-    """
-    # Load your word list
+
     with open("words_1000.txt", "r", encoding="utf-8") as f:
         word_list = f.read().split()
 
-    # Inside the loop
-   
-    
     os.makedirs(output_dir, exist_ok=True)
 
-    # Load character PNG images
+
     print("Loading character images...")
     char_images = load_character_images(input_dir)
     characters = list(char_images.keys())
     print(f"Loaded {len(characters)} characters.")
 
     for i in range(num_lines):
-        # Generate a line of real words
+
         text = ' '.join(random.choices(word_list, k=random.randint(3, 8)))
 
-        # Compose image from characters in the text
         try:
             line_img = compose_text_line(text, char_images, line_height=line_height, spacing=spacing)
         except ValueError as e:
             print(f"Skipping line {i} due to missing character: {e}")
             continue
         
-        # Optional augmentations
+
         if random.random() < 0.5:
             angle = random.uniform(-2, 2)
             line_img = line_img.rotate(angle, fillcolor=255)
@@ -163,7 +143,7 @@ def generate_training_data(input_dir="fonts/arial",
         if random.random() < 0.3:
             line_img = line_img.filter(ImageFilter.GaussianBlur(radius=random.uniform(0.5, 1.5)))
 
-        # Save TIFF and ground truth text
+
         img_path = os.path.join(output_dir, f"line_{i:04d}.tif")
         gt_path = os.path.join(output_dir, f"line_{i:04d}.gt.txt")
         line_img.save(img_path)
@@ -173,16 +153,16 @@ def generate_training_data(input_dir="fonts/arial",
         if i % 100 == 0:
             print(f"Generated {i} lines...")
 
-    print(f"✅ Dataset generation complete: {num_lines} lines saved in '{output_dir}'")
+    print(f"Emtech Datajob: generation is completed, Thank you. \n {num_lines} lines saved in '{output_dir}'")
     
-    print("Generating .box files")
+    print("Emtech: Engine: Generating .box files")
     for fname in os.listdir(output_dir):
         if fname.endswith(".tif"):
          img_path = os.path.join(output_dir, fname)
          base = os.path.splitext(img_path)[0]
          tesseract_path = r".\engine\tesseract.exe"
          subprocess.run([tesseract_path, img_path, base, "--psm", "7", "-l", "eng", "batch.nochop", "makebox"])
-    print("Box file generation complete!")
+    print("Emtech Engine: Box file generation complete!")
 if __name__ == "__main__":
     generate_training_data()
 

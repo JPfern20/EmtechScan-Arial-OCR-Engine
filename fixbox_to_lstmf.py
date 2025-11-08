@@ -1,13 +1,4 @@
 #!/usr/bin/env python3
-"""
-Fix and Generate Tesseract Training Files
------------------------------------------
-- Validates and regenerates .box files if mismatched
-- Overwrites original .box files
-- Saves visual previews of boxes
-- Generates .lstmf files for training
-"""
-
 import os
 from PIL import Image, ImageDraw
 import subprocess
@@ -22,13 +13,13 @@ path="./engine/tesseract.exe"
 def regenerate_box_file(image_path, gt_text, box_path, preview_path):
     img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
     if img is None:
-        print(f"⚠️ Failed to load image: {image_path}")
+        print(f"Failed to load image: {image_path}")
         return
 
     _, thresh = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
     contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    # Sort contours left to right
+
     contours = sorted(contours, key=lambda c: cv2.boundingRect(c)[0])
 
     if len(contours) != len(gt_text):
@@ -49,7 +40,7 @@ def regenerate_box_file(image_path, gt_text, box_path, preview_path):
 
 
 def validate_and_fix_and_generate_lstmf():
-    print(f"🔁 Validating, fixing, and generating .lstmf files in '{data_dir}'...")
+    print(f"Validating, fixing, and generating .lstmf files in '{data_dir}'...")
     fixed = 0
     lstmf_count = 0
 
@@ -84,7 +75,7 @@ def validate_and_fix_and_generate_lstmf():
                 print(f"🔧 Regenerated .box and preview for {fname}")
                 fixed += 1
 
-            # Generate .lstmf
+
             cmd = [
                 path,
                 img_path,
@@ -95,13 +86,13 @@ def validate_and_fix_and_generate_lstmf():
             ]
             try:
                 subprocess.run(cmd, check=True)
-                print(f"✅ Created .lstmf: {base}.lstmf")
+                print(f"Created .lstmf: {base}.lstmf")
                 lstmf_count += 1
             except subprocess.CalledProcessError as e:
-                print(f"❌ Error generating .lstmf for {fname}: {e}")
+                print(f"Error generating .lstmf for {fname}: {e}")
 
-    print(f"\n🎉 Done! {fixed} .box files fixed, {lstmf_count} .lstmf files generated.")
-    print(f"🖼️ Previews saved in '{preview_dir}'.")
+    print(f"\nDone! {fixed} .box files fixed, {lstmf_count} .lstmf files generated.")
+    print(f"Previews saved in '{preview_dir}'.")
 
 def run_lstmtraining():
     print("\n🚀 Starting lstmtraining...")
@@ -123,7 +114,7 @@ def run_lstmtraining():
         subprocess.run(cmd, check=True)
         print("✅ lstmtraining completed successfully!")
     except subprocess.CalledProcessError as e:
-        print(f"❌ lstmtraining failed: {e}")
+        print(f"lstmtraining failed: {e}")
 
 if __name__ == "__main__":
     #validate_and_fix_and_generate_lstmf()

@@ -46,28 +46,20 @@ class OCRApp:
     def setup_ui(self):
         frm = ttk.Frame(self.root, padding=10)
         frm.grid(row=0, column=0, sticky="nsew")
-
         ttk.Label(frm, text="EmTechScan", font=("Arial", 14, "bold")).grid(row=0, column=0, columnspan=4, pady=8)
-
         self.canvas = tk.Canvas(frm, width=640, height=480, bg="gray20")
         self.canvas.grid(row=1, column=0, columnspan=4, pady=5)
-
-        # Styled buttons
         tk.Button(frm, text="Select Image", command=self.select_image, bg="yellow", fg="black").grid(row=2, column=0, columnspan=4, sticky="ew", pady=4)
         tk.Button(frm, text="Run OCR", command=self.run_ocr, bg="yellow", fg="black").grid(row=3, column=0, columnspan=4, sticky="ew", pady=4)
         tk.Button(frm, text="Show Debug Box", command=self.show_boxes, bg="yellow", fg="black").grid(row=4, column=0, columnspan=4, sticky="ew", pady=4)
-
         self.status = ttk.Label(frm, text="Status: Ready")
         self.status.grid(row=5, column=0, columnspan=4, sticky="w", pady=3)
-
         self.text_box = tk.Text(frm, wrap="word", width=70, height=12)
         self.text_box.grid(row=6, column=0, columnspan=4, pady=5)
-
         ttk.Label(frm, text="Output Format:").grid(row=7, column=0, sticky="e", padx=5)
         self.format_choice = ttk.Combobox(frm, values=[".txt", ".docx"], state="readonly", width=10)
         self.format_choice.set(".txt")
         self.format_choice.grid(row=7, column=1, sticky="w")
-
         tk.Button(frm, text="Save Output", command=self.save_output, bg="yellow", fg="black").grid(row=8, column=0, columnspan=4, sticky="ew", pady=5)
 
     def select_image(self):
