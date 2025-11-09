@@ -4,7 +4,7 @@ import subprocess
 
 # Configuration
 data_dir = "tesseract_train_data"
-tesseract_exe = "./engine"
+tesseract_exe = "./engine/tesseract.exe"
 lang = "eng" 
 psm = "7"
 
