@@ -24,7 +24,7 @@ def regenerate_box_file(image_path, gt_text, box_path, preview_path):
     contours = sorted(contours, key=lambda c: cv2.boundingRect(c)[0])
 
     if len(contours) != len(gt_text):
-        print(f"⚠️ Mismatch: {len(contours)} contours vs {len(gt_text)} chars in {os.path.basename(image_path)}")
+        print(f"Mismatch: {len(contours)} contours vs {len(gt_text)} chars in {os.path.basename(image_path)}")
         return
 
     pil_img = Image.open(image_path).convert("RGB")
@@ -74,7 +74,7 @@ def validate_and_fix_and_generate_lstmf():
 
             if regenerate:
                 regenerate_box_file(img_path, gt_text, box_path, preview_path)
-                print(f"🔧 Regenerated .box and preview for {fname}")
+                print(f"Regenerated .box and preview for {fname}")
                 fixed += 1
 
 
@@ -114,7 +114,7 @@ def run_lstmtraining():
 
     try:
         subprocess.run(cmd, check=True)
-        print("✅ lstmtraining completed successfully!")
+        print("lstmtraining completed successfully!")
     except subprocess.CalledProcessError as e:
         print(f"lstmtraining failed: {e}")
 
