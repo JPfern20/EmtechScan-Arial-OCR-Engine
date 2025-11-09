@@ -1,0 +1,7 @@
+opencv-python
+pillow
+pytesseract
+python-docx
+numpy
+subprocess
+os
