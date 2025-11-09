@@ -49,9 +49,16 @@ class OCRApp:
         ttk.Label(frm, text="EmTechScan", font=("Arial", 14, "bold")).grid(row=0, column=0, columnspan=4, pady=8)
         self.canvas = tk.Canvas(frm, width=640, height=480, bg="gray20")
         self.canvas.grid(row=1, column=0, columnspan=4, pady=5)
-        tk.Button(frm, text="Select Image", command=self.select_image, bg="yellow", fg="black").grid(row=2, column=0, columnspan=4, sticky="ew", pady=4)
-        tk.Button(frm, text="Run OCR", command=self.run_ocr, bg="yellow", fg="black").grid(row=3, column=0, columnspan=4, sticky="ew", pady=4)
-        tk.Button(frm, text="Show Debug Box", command=self.show_boxes, bg="yellow", fg="black").grid(row=4, column=0, columnspan=4, sticky="ew", pady=4)
+        bg_path = os.path.join(os.path.dirname(__file__), "background.png")
+        if os.path.exists(bg_path):
+            bg_img = Image.open(bg_path)
+            bg_img = bg_img.resize((640, 480))  # resize to fit canvas
+            self.bg_tk_img = ImageTk.PhotoImage(bg_img)
+            # Place background image at bottom layer
+            self.canvas.create_image(0, 0, anchor="nw", image=self.bg_tk_img, tags="background")
+        tk.Button(frm, text="Select Image", command=self.select_image, bg="#ad48fa", fg="black").grid(row=2, column=0, columnspan=4, sticky="ew", pady=4)
+        tk.Button(frm, text="Run OCR", command=self.run_ocr, bg="#ad48fa", fg="black").grid(row=3, column=0, columnspan=4, sticky="ew", pady=4)
+        tk.Button(frm, text="Show Debug Box", command=self.show_boxes, bg="#ad48fa", fg="black").grid(row=4, column=0, columnspan=4, sticky="ew", pady=4)
         self.status = ttk.Label(frm, text="Status: Ready")
         self.status.grid(row=5, column=0, columnspan=4, sticky="w", pady=3)
         self.text_box = tk.Text(frm, wrap="word", width=70, height=12)
@@ -60,7 +67,7 @@ class OCRApp:
         self.format_choice = ttk.Combobox(frm, values=[".txt", ".docx"], state="readonly", width=10)
         self.format_choice.set(".txt")
         self.format_choice.grid(row=7, column=1, sticky="w")
-        tk.Button(frm, text="Save Output", command=self.save_output, bg="yellow", fg="black").grid(row=8, column=0, columnspan=4, sticky="ew", pady=5)
+        tk.Button(frm, text="Save Output", command=self.save_output, bg="#ad48fa", fg="black").grid(row=8, column=0, columnspan=4, sticky="ew", pady=5)
 
     def select_image(self):
         path = filedialog.askopenfilename(title="Select Image", filetypes=[("Image files", "*.png *.jpg *.jpeg *.bmp")])
