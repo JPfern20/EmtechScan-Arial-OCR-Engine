@@ -4,6 +4,7 @@ from PIL import Image, ImageDraw
 import subprocess
 import cv2
 import numpy as np
+import shutil
 
 data_dir = "tesseract_train_data"
 preview_dir = os.path.join(data_dir, "box_previews")
@@ -40,6 +41,7 @@ def regenerate_box_file(image_path, gt_text, box_path, preview_path):
 
 
 def validate_and_fix_and_generate_lstmf():
+    shutil.copy('./engine/myarial.traineddata', '.')
     print(f"Validating, fixing, and generating .lstmf files in '{data_dir}'...")
     fixed = 0
     lstmf_count = 0
@@ -117,10 +119,5 @@ def run_lstmtraining():
         print(f"lstmtraining failed: {e}")
 
 if __name__ == "__main__":
-    #validate_and_fix_and_generate_lstmf()
-    with open("train.list", "w") as f:
-        for fname in os.listdir("tesseract_train_data"):
-            if fname.endswith(".lstmf"):
-             f.write(os.path.join("tesseract_train_data", fname) + "\n")
+    validate_and_fix_and_generate_lstmf()
     
-    run_lstmtraining()

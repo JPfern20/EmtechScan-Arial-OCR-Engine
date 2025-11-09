@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import subprocess
+import shutil
 
 # Configuration
 data_dir = "tesseract_train_data"
@@ -9,7 +10,7 @@ lang = "eng"
 psm = "7"
 
 def generate_lstmf_files():
-    print(f"🔁 Generating .lstmf files in '{data_dir}'...")
+    print(f"Generating .lstmf files in '{data_dir}'...")
     count = 0
 
     for fname in os.listdir(data_dir):
@@ -33,12 +34,12 @@ def generate_lstmf_files():
 
             try:
                 subprocess.run(cmd, check=True)
-                print(f"✅ Created: {base}.lstmf")
+                print(f"Created: {base}.lstmf")
                 count += 1
             except subprocess.CalledProcessError as e:
-                print(f"❌ Error processing {fname}: {e}")
+                print(f"Error processing {fname}: {e}")
 
-    print(f"\nDone! {count} .lstmf files generated.")
+    print(f"\nDone! {count} .lstmf files generated. \n OCR Ready.")
 
 if __name__ == "__main__":
     generate_lstmf_files()
