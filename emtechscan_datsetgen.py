@@ -43,7 +43,7 @@ def load_character_images(input_dir):
                     if char_upper in SPECIAL_CHAR_MAP:
                         char = SPECIAL_CHAR_MAP[char_upper]
                     else:
-                        print(f"Warning: Unknown special char '{char_name}' skipped.")
+                        print(f"Warning: Ano to? '{char_name}' Tapon ko 'to.")
                         continue
                 else:
                     if folder == 'upper_case':
