@@ -37,7 +37,7 @@ def load_character_images(input_dir):
         for filename in files:
             if filename.endswith('.png'):
                 char_name = filename.split('.')[0]
-                # Determine actual character
+  
                 if folder == 'special_characters':
                     char_upper = char_name.upper()
                     if char_upper in SPECIAL_CHAR_MAP:
@@ -55,7 +55,7 @@ def load_character_images(input_dir):
                     else:
                         char = char_name
 
-                # Load image and convert to grayscale ('L')
+
                 img_path = os.path.join(root, filename)
                 img = Image.open(img_path).convert('L')
                 char_images[char] = img
@@ -63,8 +63,8 @@ def load_character_images(input_dir):
     if not char_images:
         raise ValueError("EmtechScan: DataJob: No character images are there in the specified input directory.")
     if ' ' not in char_images:
-        space_width = 20  # Adjust as needed for spacing
-        space_height = 64  # Match your line_height
+        space_width = 20 
+        space_height = 64 
         space_img = Image.new('L', (space_width, space_height), color=255)
         char_images[' '] = space_img
     
@@ -72,10 +72,6 @@ def load_character_images(input_dir):
     return char_images
 
 def compose_text_line(text, char_images, line_height=64, spacing=5):
-    """
-    Create a PIL Image by horizontally concatenating character images
-    """
-    # Resize all chars to uniform height while keeping aspect ratio
     resized_chars = []
     for ch in text:
         if ch not in char_images:
@@ -152,7 +148,7 @@ def generate_training_data(input_dir="fonts/arial",
             f.write(text)
 
         if i % 100 == 0:
-            print(f"Generated {i} lines...")
+            print(f"Generated {(i/1000)*100}%...")
 
     print(f"Emtech Datajob: generation is completed, Thank you. \n {num_lines} lines saved in '{output_dir}'")
     

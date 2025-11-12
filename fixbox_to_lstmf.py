@@ -41,8 +41,8 @@ def regenerate_box_file(image_path, gt_text, box_path, preview_path):
 
 
 def validate_and_fix_and_generate_lstmf():
-    shutil.copy('./engine/myarial.traineddata', '.')
-    print(f"Validating, fixing, and generating .lstmf files in '{data_dir}'...")
+    
+    print(f"Validating and Starting Training on External Engine '{data_dir}'...")
     fixed = 0
     lstmf_count = 0
 
@@ -56,7 +56,7 @@ def validate_and_fix_and_generate_lstmf():
             lstmf_path = os.path.join(data_dir, base + ".lstmf")
 
             if not os.path.exists(gt_path):
-                print(f"⚠️ Missing .gt.txt for {fname}")
+                print(f"Please check .gt.txt for {fname}")
                 continue
 
             with open(gt_path, 'r', encoding='utf-8') as f:
@@ -74,7 +74,7 @@ def validate_and_fix_and_generate_lstmf():
 
             if regenerate:
                 regenerate_box_file(img_path, gt_text, box_path, preview_path)
-                print(f"Regenerated .box and preview for {fname}")
+                print(f"Regenerated random .box and preview for {fname}")
                 fixed += 1
 
 
@@ -88,35 +88,13 @@ def validate_and_fix_and_generate_lstmf():
             ]
             try:
                 subprocess.run(cmd, check=True)
-                print(f"Created .lstmf: {base}.lstmf")
+                print("<3")
                 lstmf_count += 1
             except subprocess.CalledProcessError as e:
-                print(f"Error generating .lstmf for {fname}: {e}")
-
-    print(f"\nDone! {fixed} .box files fixed, {lstmf_count} .lstmf files generated.")
+                print(f"Error .lstmf for {fname}: {e}")
+    shutil.copy('./engine/myarial.traineddata', '.')
+    print(f"\nEmtech DataJob: Done! {fixed} .box files fixed, {lstmf_count} .lstmf files generated.")
     print(f"Previews saved in '{preview_dir}'.")
-
-def run_lstmtraining():
-    print("\n🚀 Starting lstmtraining...")
-
-    lstmtraining_path = os.path.abspath("./engine/lstmtraining.exe")
-    traineddata = os.path.abspath("./engine/tessdata/eng.traineddata")
-    output_model = os.path.abspath("arial_checkpoint")
-    train_list = os.path.abspath("train.list")
-
-    cmd = [
-        lstmtraining_path,
-        "--model_output", output_model,
-        "--traineddata", traineddata,
-        "--train_listfile", train_list,
-        "--max_iterations", "4000"
-    ]
-
-    try:
-        subprocess.run(cmd, check=True)
-        print("lstmtraining completed successfully!")
-    except subprocess.CalledProcessError as e:
-        print(f"lstmtraining failed: {e}")
 
 if __name__ == "__main__":
     validate_and_fix_and_generate_lstmf()

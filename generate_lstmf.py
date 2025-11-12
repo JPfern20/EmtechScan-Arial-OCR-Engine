@@ -10,7 +10,7 @@ lang = "eng"
 psm = "7"
 
 def generate_lstmf_files():
-    print(f"Generating .lstmf files in '{data_dir}'...")
+    print(f"Processing in '{data_dir}'...")
     count = 0
 
     for fname in os.listdir(data_dir):
@@ -20,7 +20,7 @@ def generate_lstmf_files():
             gt_path = os.path.join(data_dir, base + ".gt.txt")
 
             if not os.path.exists(gt_path):
-                print(f"⚠️ Skipping {fname}: missing ground truth file.")
+                print(f"Skipped {fname}: missing ground truth file.")
                 continue
 
             cmd = [
